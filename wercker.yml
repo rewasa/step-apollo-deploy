@@ -2,32 +2,16 @@ box: wercker/default
 build:
   steps:
     - validate-wercker-step
-    - internal/docker-push:
-        username: $DOCKER_USERNAME
-        password: $DOCKER_PASSWORD
-        registry: https://hub.docker.com
-        repository: rewasa/apollo
-        ports: "8080"
-        cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/server.js”
-    - add-ssh-key:
-        keyname: DIGITAL_OCEAN
-    - add-to-known_hosts:
-        hostname: 178.62.47.215
-    - script:
-        name: pull latest image
-        code: ssh root@178.62.47.215 docker pull rewasa/apollo:latest
-    - script:
-        name: stop running container
-        code: ssh root@178.62.47.215 docker stop apollo || echo ‘failed to stop running container’
-    - script:
-        name: remove stopped container
-        code: ssh root@178.62.47.215 docker rm apollo || echo ‘failed to remove stopped container’
-    - script:
-        name: remove image behind stopped container
-        code: ssh root@178.62.47.215 docker rmi rewasa/apollo:current || echo ‘failed to remove image behind stopped container’
-    - script:
-        name: tag newly pulled image
-        code: ssh root@178.62.47.215 docker tag rewasa/apollo:latest rewasa/apollo:current
-    - script:
-        name: run new container
-        code: ssh root@178.62.47.215 docker run -d -p 8080:8080 --name apollo rewasa/apollo:current
+    - install-packages:
+        packages: wget unzip
+    - pip-install:
+        requirements_file: ""
+        packages_list: "ansible"
+deploy:
+  steps:
+    - capgemini/apollo-deploy:
+        cloud: digitalocean
+        artifact_name: rewasa/apollo-ubuntu-14.04-amd64
+        artifact_version: 1
+        terraform_version: 0.5.0
+        run_tests: true
