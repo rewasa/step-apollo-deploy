@@ -5,6 +5,7 @@ build:
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
+        registry: https://registry.hub.docker.com
         repository: rewasa/apollo
         cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/server.js”
     - add-ssh-key:
