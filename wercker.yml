@@ -5,8 +5,9 @@ build:
     - internal/docker-push:
         username: $DOCKER_USERNAME
         password: $DOCKER_PASSWORD
-        registry: https://registry.hub.docker.com
+        registry: https://hub.docker.com
         repository: rewasa/apollo
+        ports: "8080"
         cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/server.js”
     - add-ssh-key:
         keyname: DIGITAL_OCEAN
