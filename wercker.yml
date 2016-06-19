@@ -8,12 +8,12 @@ build:
         repository: rewasa/apollo
         cmd: /bin/bash -c “cd /pipeline/source && supervisor - watch ./src src/server.js”
     - add-ssh-key:
-      keyname: DIGITAL_OCEAN
+        keyname: DIGITAL_OCEAN
     - add-to-known_hosts:
-      hostname: 178.62.47.215
+        hostname: 178.62.47.215
     - script:
-      name: pull latest image
-      code: ssh root@178.62.47.215 docker pull rewasa/apollo:latest
+        name: pull latest image
+        code: ssh root@178.62.47.215 docker pull rewasa/apollo:latest
     - script:
         name: stop running container
         code: ssh root@178.62.47.215 docker stop apollo || echo ‘failed to stop running container’
